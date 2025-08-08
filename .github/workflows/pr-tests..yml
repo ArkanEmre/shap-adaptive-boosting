@@ -1,0 +1,51 @@
+name: PR Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+
+env:
+  POETRY_VERSION: 2.0.1
+  PYTHON_DOCKER_IMAGE_TAG: python:3.13.2-slim
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ env.PYTHON_DOCKER_IMAGE_TAG }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      with:
+        path: /.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache Poetry packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/poetry
+        key: ${{ runner.os }}-poetry-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
+    - name: Install Poetry
+      run: pip install poetry==${{ env.POETRY_VERSION }}
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run tests
+      run: |
+        source $(poetry env info --path)/bin/activate
+        poetry run pytest --verbose --tb=short
