@@ -23,22 +23,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      with:
-        path: /.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
-    - name: Cache Poetry packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/poetry
-        key: ${{ runner.os }}-poetry-${{ hashFiles('pyproject.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-poetry-
-
     - name: Install Poetry
       run: pip install poetry==${{ env.POETRY_VERSION }}
 
@@ -46,5 +30,4 @@ jobs:
       run: poetry install
 
     - name: Run tests
-      run: |
-        poetry run pytest --verbose --tb=short
+      run: poetry run pytest --verbose --tb=short
