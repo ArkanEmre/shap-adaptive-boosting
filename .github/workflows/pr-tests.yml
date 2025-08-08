@@ -47,5 +47,4 @@ jobs:
 
     - name: Run tests
       run: |
-        eval $(poetry env activate)
         poetry run pytest --verbose --tb=short

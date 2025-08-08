@@ -64,7 +64,6 @@ jobs:
 
     - name: Run tests
       run: |
-        peval $(poetry env activate)
         poetry run pytest
 
   publish-package:
