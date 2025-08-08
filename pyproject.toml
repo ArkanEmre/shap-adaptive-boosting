@@ -5,8 +5,6 @@ description = "Versions of AdaBoost and RUSBoost compatible with TreeSHAP and re
 authors = ["Emre Arkan <emre.arkan@alexanderthamm.com>"]
 packages = [{ include = "shap_adaptive_boosting", from = "src" }]
 include = ["src/shap_adaptive_boosting/res/*"]
-
-[project]
 readme = "README.md"
 
 [tool.poetry.dependencies]
