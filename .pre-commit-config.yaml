@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/floatingpurr/sync_with_poetry
+    rev: 1.2.1
+    hooks:
+      - id: sync_with_poetry
+        args: [ "--all", "--db", ".pre-commit-repos.yaml" ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: pretty-format-json
+        args: [ "--autofix", "--no-sort-keys" ]
+      - id: name-tests-test
+        args: [ "--pytest-test-first" ]
+        exclude: tests/testing_*
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [ "--no-preview" ]
+      - id: ruff-format
+        args: [ "--no-preview" ]
+  - repo: https://github.com/pypa/pip-audit
+    rev: v2.9.0
+    hooks:
+      - id: pip-audit
+        args: [
+          "--ignore-vuln", "GHSA-9wx4-h78v-vm56",  # requests 2.31.0 -> 2.32.0
+          "--ignore-vuln", "GHSA-248v-346w-9cwc",  # certifi: 2024.2.2 -> 2024.7.4
+          "--ignore-vuln", "GHSA-34jh-p97f-mpxf",  # urrlib3: 2.2.1 -> 2.2.2
+          "--ignore-vuln", "GHSA-48p4-8xcf-vxj5",  # urrlib3: 2.4.0 -> 2.5.0
+          "--ignore-vuln", "GHSA-pq67-6m6q-mj2v",  # urrlib3: 2.4.0 -> 2.5.0
+          "--ignore-vuln", "PYSEC-2023-228",       # pip: 23.2.1 -> 23.3
+          "--ignore-vuln", "GHSA-5rjg-fvgr-3xxf",  # setuptools: 75.8.2 -> 78.1.1
+          "--ignore-vuln", "GHSA-9hjg-9r4m-mvj7",  # requests: 2.32.3 ->  2.32.4
+        ]
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        language: python
+        language_version: python3
+        types: [ python ]
+        additional_dependencies: [ "bandit[ toml ]" ]
+        args: [ "-c", "pyproject.toml", "-r", "." ]
