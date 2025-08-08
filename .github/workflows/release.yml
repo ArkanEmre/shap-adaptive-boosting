@@ -1,0 +1,74 @@
+name: Build, Test, and Publish
+
+on:
+  release:
+    types: [published]
+
+env:
+  POETRY_VERSION: 2.0.1
+
+jobs:
+  build-wheel:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.13.2-slim
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Poetry
+      run: pip install poetry==${{ env.POETRY_VERSION }}
+
+    - name: Build wheel
+      run: poetry build -f wheel
+
+    - name: Upload wheel artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-wheel
+        path: dist/shap_adaptive_boosting-*.whl
+        retention-days: 180  # 6 months
+
+  run-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.13.2-slim
+    needs: build-wheel
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Poetry
+      run: pip install poetry==${{ env.POETRY_VERSION }}
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run tests
+      run: |
+        poetry run pytest
+
+  publish-package:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.13.2-slim
+    needs: run-tests
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Poetry
+      run: pip install poetry==${{ env.POETRY_VERSION }}
+
+    - name: Build wheel
+      run: poetry build -f wheel
+
+    - name: Publish to PyPI
+      env:
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        poetry config pypi-token.pypi $POETRY_PYPI_TOKEN_PYPI
+        poetry publish --skip-existing

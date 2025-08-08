@@ -1,0 +1,33 @@
+name: PR Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'poetry.lock'
+      - '.github/**'
+
+env:
+  POETRY_VERSION: 2.0.1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.13.2-slim
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Poetry
+      run: pip install poetry==${{ env.POETRY_VERSION }}
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run tests
+      run: poetry run pytest --verbose --tb=short
