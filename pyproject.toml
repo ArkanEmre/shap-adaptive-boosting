@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "shap-adaptive-boosting"
-version = "0.0.1"
+version = "1.0.0"
 description = "Versions of AdaBoost and RUSBoost compatible with TreeSHAP and respective TreeSHAP Explainers."
 authors = ["Emre Arkan <emre.arkan@alexanderthamm.com>"]
 packages = [{ include = "shap_adaptive_boosting", from = "src" }]
 include = ["src/shap_adaptive_boosting/res/*"]
+
+[project]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10"
