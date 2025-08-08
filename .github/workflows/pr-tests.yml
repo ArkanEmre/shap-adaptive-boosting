@@ -8,6 +8,7 @@ on:
       - 'tests/**'
       - 'pyproject.toml'
       - 'poetry.lock'
+      - '.github/**'
 
 env:
   POETRY_VERSION: 2.0.1
@@ -46,5 +47,5 @@ jobs:
 
     - name: Run tests
       run: |
-        source $(poetry env info --path)/bin/activate
+        eval $(poetry env activate)
         poetry run pytest --verbose --tb=short
