@@ -11,13 +11,12 @@ on:
 
 env:
   POETRY_VERSION: 2.0.1
-  PYTHON_DOCKER_IMAGE_TAG: python:3.13.2-slim
 
 jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.PYTHON_DOCKER_IMAGE_TAG }}
+      image: python:3.13.2-slim
 
     steps:
     - name: Checkout code
